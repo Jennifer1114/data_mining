@@ -89,9 +89,9 @@ def calcStdev(class1, class2, maxlen, mean1, mean2):
 		for pair in list:
 			sqdiff2[int(pair[0])-1] += pow(float(pair[1])-float(mean2[int(pair[0])-1]),2.0)
 
-	stdev1 = [u / float(len(class1)) for u in sqdiff1]
+	stdev1 = [u / float(len(class1) - 1.0) for u in sqdiff1]
 	stdev1 = [math.sqrt(v) for v in stdev1]
-	stdev2 = [u / float(len(class2)) for u in sqdiff2]
+	stdev2 = [u / float(len(class2) - 1.0) for u in sqdiff2]
 	stdev2 = [math.sqrt(v) for v in stdev2]
 
 	return {'-1':stdev1, '+1':stdev2}
@@ -105,7 +105,7 @@ def calcProb(x, mean, stdev):
 		exp = math.exp(-(math.pow(x-mean,2)/(2*math.pow(stdev,2))))
 		return (1 / (math.sqrt(2*math.pi) * stdev)) * exp
 	else:
-		exp = math.exp(-(math.pow(x-mean,2)/(2*math.pow(0.01,2))))
+		exp = math.exp(-(math.pow(x-mean,2)/(2*math.pow(0.1,2))))
 		return (1 / (math.sqrt(2*math.pi) * 0.1)) * exp
 
 
@@ -149,13 +149,13 @@ def cmpTestClass(prediction, trueClass):
 	confMatrix = [0]*4
 
 	for index in range(len(prediction)):
-		if (prediction[index] == '-1' and trueClass[index] == '-1'):
-			confMatrix[0] += 1
-		if (prediction[index] == '+1' and trueClass[index] == '-1'):
-			confMatrix[1] += 1
-		if (prediction[index] == '-1' and trueClass[index] == '+1'):
-			confMatrix[2] += 1
 		if (prediction[index] == '+1' and trueClass[index] == '+1'):
+			confMatrix[0] += 1
+		if (prediction[index] == '-1' and trueClass[index] == '+1'):
+			confMatrix[1] += 1
+		if (prediction[index] == '+1' and trueClass[index] == '-1'):
+			confMatrix[2] += 1
+		if (prediction[index] == '-1' and trueClass[index] == '-1'):
 			confMatrix[3] += 1
 
 	return confMatrix
